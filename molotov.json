@@ -1,0 +1,20 @@
+{
+  "molotov": {
+    "tests": {
+      "big": {
+        "duration": 30,
+        "scenario": "loadtest.py",
+        "workers": 100
+      },
+      "small": {
+        "duration": 10,
+        "scenario": "loadtest.py",
+        "workers": 3
+      },
+      "smoke": {
+        "duration": 1,
+        "scenario": "loadtest.py"
+      }
+    }
+  }
+}
