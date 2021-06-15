@@ -120,12 +120,49 @@ SUCCESSES: 11591 | FAILURES: 0 | WORKERS: 5 # (+32.41% vs baseline)
 
 So whether we use use 1 worker (default) or use 5 workers, we only see a 32% increase in requests per second.
 
+## USING A MOLOTOV CONFIG FILE
+
+At some point, managing all your configurations using command line flags gets too tedious and difficult to manage. You can create a test configuration file and specify the config file via the command line.
+
+For example, if we have a file named "molotov.json" with the following contents:
+
+```json
+{
+  "molotov": {
+    "tests": {
+      "big": {
+        "duration": 30,
+        "scenario": "loadtest.py",
+        "workers": 100
+      },
+      "small": {
+        "duration": 10,
+        "scenario": "loadtest.py",
+        "workers": 3
+      },
+      "smoke": {
+        "duration": 1,
+        "single_run": true,
+        "scenario": "loadtest.py"
+      }
+    }
+  }
+}
+```
+
+We could run the "smoke" tests using the following command:
+
+```sh
+molotov --config molotov.json smoke
+```
+
+**NOTE:** Unlike the moloslave example at [Run from GitHub](https://molotov.readthedocs.io/en/stable/slave/), setting the `requirements` or `env` global options don't seem to be supported when executing load tests locally via the `--config` flag.
+
 ## TROUBLESHOOTING
 
 1. `ModuleNotFoundError("No module named 'loadtest'")`
 
 You'll encounter this error if you don't specify a scenario file and Molotov is unable to find the default "loadtest.py" file:
-
 
 ```sh
 molotov --single-run
@@ -150,7 +187,9 @@ To fix this, you'll need to do one of the following:
 - rename your scenario file to loadtest.py.
 - specify a scenario file on the command line. For example, <kbd>molotov --single-run my-loadtests.py</kbd>.
 
-
 1. `argument -s/--single-mode: expected one argument`
 
 Most likely, you tried running <kbd>molotov -s</kbd> without specifying a single scenario name.
+
+1. Installing molotov latest from GitHub
+TODO.
